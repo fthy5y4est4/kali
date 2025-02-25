@@ -1,0 +1,36 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const latestPosts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 3);
+---
+
+<Layout title="Chronicles of History - Exploring the Past">
+  <main>
+    <section class="py-20 bg-stone-800 text-white">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-5xl font-bold mb-6">Chronicles of History</h1>
+        <p class="text-xl max-w-2xl mx-auto">Exploring the fascinating stories, events, and figures that shaped our world.</p>
+      </div>
+    </section>
+
+    <section class="container mx-auto px-4 py-16">
+      <h2 class="text-3xl font-bold mb-8">Latest Articles</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {latestPosts.map(post => (
+          <article class="bg-white rounded-lg shadow-md overflow-hidden">
+            <img src={post.data.image} alt={post.data.title} class="w-full h-48 object-cover"/>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">{post.data.title}</h3>
+              <p class="text-stone-600 mb-4">{post.data.excerpt}</p>
+              <a href={`/blog/${post.slug}`} class="text-stone-800 font-semibold hover:text-stone-600">
+                Read more →
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  </main>
+</Layout>

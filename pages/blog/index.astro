@@ -1,0 +1,32 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<Layout title="History Blog - All Articles">
+  <main class="container mx-auto px-4 py-12">
+    <h1 class="text-4xl font-bold mb-12">History Articles</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {sortedPosts.map(post => (
+        <article class="bg-white rounded-lg shadow-md overflow-hidden">
+          <img src={post.data.image} alt={post.data.title} class="w-full h-56 object-cover"/>
+          <div class="p-6">
+            <h2 class="text-2xl font-bold mb-2">{post.data.title}</h2>
+            <div class="text-stone-600 mb-4">
+              <span>{post.data.author}</span>
+              <span class="mx-2">•</span>
+              <span>{new Date(post.data.date).toLocaleDateString()}</span>
+            </div>
+            <p class="text-stone-600 mb-4">{post.data.excerpt}</p>
+            <a href={`/blog/${post.slug}`} class="text-stone-800 font-semibold hover:text-stone-600">
+              Read more →
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </main>
+</Layout>
